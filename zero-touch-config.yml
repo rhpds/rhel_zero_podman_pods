@@ -9,10 +9,8 @@ antora:
     - name: module-02   
       label: Pods and pod networking
     - name: module-03
-      label: Pods and pod networking
-    - name: module-04
       label: Operationalizing Pods with kube
-    - name: module-05
+    - name: module-04
       label: Managing Pods with Systemd and Quadlet
 
 tabs:
