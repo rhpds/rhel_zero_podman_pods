@@ -1,153 +1,83 @@
-== Pods and pod networking
+== Operationalizing Pods with kube
 
-More on pods
+Podman generate, and podman play
+Another great feature of pods is that you can generate a yaml definition of your pod, and use it to re-create your pod using `+podman generate+` and `+podman play+`.
 
-Pods are good for more than just organization though. A pod also
-containerizes the network communication between the containers within
-it.
+Let's generate a definition for your newly networked pod.
 
-If we run the same httpd container from earlier, without putting it
-inside of a pod, we can then access whatever ports we have exposed on the
-container, via localhost on my container host.
 
-[source,bash]
+
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
-podman run -d -p 8080:80 --name my-bare-httpd httpd
+podman generate kube my-networked-pod > my-networked-pod.yaml
+
 ----
 
-This tells podman to run the same container image, with a new name, and
-forward port 8080 on our host, to port 80 on the container.
+Now, we can see what we generated
 
-Now if we look at `+podman ps+` again, we’ll see a new httpd container,
-notice that it says its listening on `+0.0.0.0:8080+`
-
-[source,bash]
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
-podman ps
+cat my-networked-pod.yaml
 ----
 
 [source,text]
 ----
-# podman ps
-
-CONTAINER ID IMAGE                         COMMAND   CREATED           STATUS               PORTS                 NAMES 
-09996c7a624b localhost/podman-pause:4.0.2-1652984291 12 minutes ago Up 10 minutes ago                             2d95aa4fdaee-infra 
-68ca89e03e63 docker.io/library/httpd:latest httpd-foreground 10 minutes ago Up 10 minutes ago                     my-httpd
-90f6b39d18ac docker.io/library/httpd:latest httpd-foreground 4 seconds ago Up 3 seconds ago 0.0.0.0:8080->80/tcp my-bare-httpd
+root@rhel:~# cat my-networked-pod.yaml
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
 #
+# Created with podman-4.4.1
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2023-09-26T19:58:57Z"
+  labels:
+    app: my-networked-pod
+  name: my-networked-pod
+spec:
+  containers:
+  - image: docker.io/library/httpd:latest
+    name: my-networked-httpd
+    ports:
+    - containerPort: 80
+      hostPort: 8080
+    resources: {}
+  hostname: my-networked-pod
+  restartPolicy: Never
+status: {}
+
 ----
 
-And we can even test that out with `curl`
+Now, if we stop, and remove our pod.
+
 
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
-curl http://127.0.0.1:8080
+podman pod stop my-networked-pod && podman pod rm my-networked-pod
 ----
+
+We can re-create it easily with podman play.
+
+
+[source,bash,subs="+macros,+attributes",role=execute]
+----
+podman play kube my-networked-pod.yaml
+----
+
+NOTE: This feature of podman works on other items as well, you can, for instance, define a volume and use podman generate to store the volume definition as a yaml file. Then re-create it on another system using podman play.
 
 [source,text]
 ----
-# curl http://127.0.0.1:8080
-
-It works!
-
-----
-
-Lets try to make a new httpd container, inside of our pod, that forwards in the same way.  First let's stop our new httpd container.
-
-[source,bash,subs="+macros,+attributes",role=execute]
-----
-podman stop my-bare-httpd
-----
-
-Now, we still have an httpd container running, but we cant access it,
-not just because we havent forwarded any ports to it, but because its
-inside of a pod. The pod acts almost like a firewall, allowing or
-disallowing ports to the containers within it. Containers that run
-container images that are configured to listen on a given port are
-accessible to each other within the pod, but outside the pod are not
-accessible unless we tell the pod to allow it. 
-
-
-== Pod networking
-
-Let’s run a container, that lets us get to a bash shell within our pod,
-to show that the httpd service is in fact accessible, just not from
-outside the pod.
-
-[source,bash,subs="+macros,+attributes",role=execute]
-----
-podman run -it --pod my-pod --rm registry.access.redhat.com/ubi9/ubi
-----
-
-In this example, we’re running a container, interactively, insdie of our
-pod. You should get to a bash prompt inside of a RHEL UBI container.
-
-[source,text]
-----
-# podman run -it –pod my-pod –rm registry.access.redhat.com/ubi9/ubi
-[root@my-pod /]#
+root@rhel:~# podman play kube my-networked-pod.yaml
+Pod:
+2f3d42d6cac720972889496334ef23260fa33030ddb3bccdcb7ff3a15dea07ac
+Container:
+f87d81a769a3cef7b5caf52e958426fd4f3f614e130bbb5e91c193ac36b3a27d
 
 ----
 
-This container doesn't run any services, but if we try to use curl on localhost, we'll see that in fact we get a response!
+Now, if we check on `+podman pod ps+` and `+podman ps+` we will see a new pod, and container within it.
 
-[source,bash,subs="+macros,+attributes",role=execute]
-----
-curl http://127.0.0.1
-----
-
-[source,text]
-----
-[root@my-pod /]# curl http://127.0.0.1
-
-It works!
-
-[root@my-pod /]#
-
-----
-You can exit that shell with
-
-[source,bash,subs="+macros,+attributes",role=execute]
-----
-exit
-----
-
-[source,text]
-----
-[root@my-pod /]# exit
-exit
-
-root@rhel :~#
-----
-
-
-So let's re-create our pod, and make it listen on port 80.  Let's stop, and then delete our pod.
-
-[source,bash,subs="+macros,+attributes",role=execute]
-----
-podman pod stop my-pod && podman pod rm my-pod
-----
-
-Now let’s make a new pod, with a new httpd container, and have the pod
-forward port 8080 to port 80 inside the pod.
-
-[source,bash,subs="+macros,+attributes",role=execute]
-----
-podman pod create --name my-networked-pod -p 8080:80
-----
-
-And then we’ll need a container to listen on port 80, but we don’t need
-to tell the container to forward anything, that’s handled at the pod
-level.
-
-[source,bash,subs="+macros,+attributes",role=execute]
-----
-podman run -d --pod my-networked-pod --name my-networked-httpd httpd
-----
-
-Now, if we check `+podman pod ps+` and `+podman ps+` we’ll see that both
-the pod container, and the container itself show the port 8080 forward,
-even though we didnt specify that on the container.
 
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
@@ -156,9 +86,10 @@ podman pod ps
 
 [source,text]
 ----
-# podman pod ps
-POD ID       NAME             STATUS  CREATED         INFRA ID   # OF CONTAINERS 
-63c4292d1879 my-networked-pod Running 19 seconds ago 74be17e394e6 2
+root@rhel:~# podman pod ps
+POD ID        NAME              STATUS      CREATED        INFRA ID      # OF CONTAINERS
+2f3d42d6cac7  my-networked-pod  Running     3 minutes ago  d9f73884ad91  2
+
 ----
 
 [source,bash,subs="+macros,+attributes",role=execute]
@@ -168,15 +99,14 @@ podman ps
 
 [source,text]
 ----
-# podman ps
+root@rhel:~# podman ps
+CONTAINER ID  IMAGE                                    COMMAND           CREATED        STATUS        PORTS                 NAMES
+d9f73884ad91  localhost/podman-pause:4.4.1-1682527828                    3 minutes ago  Up 3 minutes  0.0.0.0:8080->80/tcp  2f3d42d6cac7-infra
+f87d81a769a3  docker.io/library/httpd:latest           httpd-foreground  3 minutes ago  Up 3 minutes  0.0.0.0:8080->80/tcp  my-networked-pod-my-networked-httpd
 
-CONTAINER ID IMAGE                         COMMAND   CREATED        STATUS             PORTS               NAMES
-74be17e394e6 localhost/podman-pause:4.0.2-1652984291 26 seconds ago Up 13 seconds ago 0.0.0.0:8080->80/tcp 63c4292d1879-infra
-0d13004a35e7 docker.io/library/httpd:latest httpd-foreground 13 seconds ago Up 12 seconds ago 0.0.0.0:8080->80/tcp my-networked-httpd
 ----
 
-
-And we should be able to test that with `curl` now.
+Now, if you try your curl command from earlier, you should get your test site just as before. You can see how this is a great way to save the deployment information and re-deploy quickly.
 
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
@@ -190,5 +120,4 @@ curl http://127.0.0.1:8080
 It works!
 ----
 
-In our next step, we'll look at how to operationalize pod deployements using kubelets!
-
+In the next step, we're going a little deeper into operationalizing your pod, with Quadlet.
