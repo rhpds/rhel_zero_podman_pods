@@ -7,7 +7,7 @@ For this scenario, `+container-tools+` which contains podman and its
 depenencies, has already been installed on the system.
 ____
 
-The feature we will be working with is specific to Podan version 4 and
+The feature we will be working with is specific to Podman version 4 and
 newer, so first let’s check that podman 4.0.x is installed on the
 system.
 
