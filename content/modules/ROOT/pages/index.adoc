@@ -1,4 +1,6 @@
-== Validate the environment
+== Validating podman, and an introduction to pods
+
+Validate the environment
 
 ____
 For this scenario, `+container-tools+` which contains podman and its
@@ -14,10 +16,11 @@ system.
 podman --version
 ----
 
-You should see the output below -
+You should see output similar to this:
 
-== podman –version
-
+[source,text]
+----
+# podman –version
 podman version 4.0.2
-
-With podman verified, we can continue with the scenario.
+#
+----
