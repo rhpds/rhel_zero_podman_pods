@@ -18,6 +18,6 @@ You should see the output below -
 
 == podman –version
 
-podman version 4.0.2 ```
+podman version 4.0.2
 
 With podman verified, we can continue with the scenario.
