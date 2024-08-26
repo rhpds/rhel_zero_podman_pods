@@ -6,11 +6,13 @@ antora:
   modules:
     - name: index
       label: Validating podman, and an introduction to pods
-    - name: module-02
-      label: Pods and pod networking
+    - name: module-02   
+      label: Introduction to Podman Pods
     - name: module-03
-      label: Operationalizing Pods with kube
+      label: Pods and pod networking
     - name: module-04
+      label: Operationalizing Pods with kube
+    - name: module-05
       label: Managing Pods with Systemd and Quadlet
 
 tabs:
