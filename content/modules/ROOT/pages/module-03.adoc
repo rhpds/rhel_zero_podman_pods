@@ -1,11 +1,13 @@
-== More on pods
+== Pods and pod networking
+
+More on pods
 
 Pods are good for more than just organization though. A pod also
 containerizes the network communication between the containers within
 it.
 
-If I run the same httpd container from earlier, without putting it
-inside of a pod, I can then access whatever ports I have exposed on the
+If we run the same httpd container from earlier, without putting it
+inside of a pod, we can then access whatever ports we have exposed on the
 container, via localhost on my container host.
 
 [source,bash]
@@ -24,34 +26,40 @@ notice that it says its listening on `+0.0.0.0:8080+`
 podman ps
 ----
 
-== podman ps
+[source,text]
+----
+# podman ps
 
 CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES 09996c7a624b
 localhost/podman-pause:4.0.2-1652984291 12 minutes ago Up 10 minutes ago
 2d95aa4fdaee-infra 68ca89e03e63 docker.io/library/httpd:latest
 httpd-foreground 10 minutes ago Up 10 minutes ago my-httpd 90f6b39d18ac
 docker.io/library/httpd:latest httpd-foreground 4 seconds ago Up 3
-seconds ago 0.0.0.0:8080->80/tcp my-bare-httpd #
-
-....
+seconds ago 0.0.0.0:8080->80/tcp my-bare-httpd 
+#
+----
 
 And we can even test that out with `curl`
 
-```bash
+[source,bash,subs="+macros,+attributes",role=execute]
+----
 curl http://127.0.0.1:8080
-....
+----
 
-== curl http://127.0.0.1:8080
+[source,text]
+----
+# curl http://127.0.0.1:8080
 
-It works!
+<html><body><h1>It works!</h1></body></html>
 
-....
+----
 
 Lets try to make a new httpd container, inside of our pod, that forwards in the same way.  First let's stop our new httpd container.
 
-```bash
+[source,bash,subs="+macros,+attributes",role=execute]
+----
 podman stop my-bare-httpd
-....
+----
 
 Now, we still have an httpd container running, but we cant access it,
 not just because we havent forwarded any ports to it, but because its
@@ -59,5 +67,4 @@ inside of a pod. The pod acts almost like a firewall, allowing or
 disallowing ports to the containers within it. Containers that run
 container images that are configured to listen on a given port are
 accessible to each other within the pod, but outside the pod are not
-accessible unless we tell the pod to allow it. We’ll demonstrate this in
-the next step.
+accessible unless we tell the pod to allow it. 
