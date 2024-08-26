@@ -30,12 +30,10 @@ podman ps
 ----
 # podman ps
 
-CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES 09996c7a624b
-localhost/podman-pause:4.0.2-1652984291 12 minutes ago Up 10 minutes ago
-2d95aa4fdaee-infra 68ca89e03e63 docker.io/library/httpd:latest
-httpd-foreground 10 minutes ago Up 10 minutes ago my-httpd 90f6b39d18ac
-docker.io/library/httpd:latest httpd-foreground 4 seconds ago Up 3
-seconds ago 0.0.0.0:8080->80/tcp my-bare-httpd 
+CONTAINER ID IMAGE                         COMMAND   CREATED           STATUS               PORTS                 NAMES 
+09996c7a624b localhost/podman-pause:4.0.2-1652984291 12 minutes ago Up 10 minutes ago                             2d95aa4fdaee-infra 
+68ca89e03e63 docker.io/library/httpd:latest httpd-foreground 10 minutes ago Up 10 minutes ago                     my-httpd
+90f6b39d18ac docker.io/library/httpd:latest httpd-foreground 4 seconds ago Up 3 seconds ago 0.0.0.0:8080->80/tcp my-bare-httpd
 #
 ----
 
@@ -50,7 +48,7 @@ curl http://127.0.0.1:8080
 ----
 # curl http://127.0.0.1:8080
 
-<html><body><h1>It works!</h1></body></html>
+It works!
 
 ----
 
