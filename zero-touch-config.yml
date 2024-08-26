@@ -14,6 +14,8 @@ antora:
       label: Managing Pods with Systemd and Quadlet
 
 tabs:
-  - name: terminal
+  - name: ">_ Terminal"
     port: 443
-    path: /wetty
+    path: /tty1
+    user: root
+    host: rhel
