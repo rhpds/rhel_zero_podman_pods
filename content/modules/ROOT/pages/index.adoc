@@ -9,7 +9,7 @@ The feature we will be working with is specific to Podan version 4 and
 newer, so first let’s check that podman 4.0.x is installed on the
 system.
 
-[source,bash]
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 podman --version
 ----
