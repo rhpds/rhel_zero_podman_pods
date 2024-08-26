@@ -1,6 +1,5 @@
 == Managing Pods with Systemd and Quadlet
 
-Quadlet
 Quadlet is a systemd generator, that will take your pod definition, and register it as a service in systemd. We have provided a quadlet pod defintion for you.
 
 [source,bash,subs="+macros,+attributes",role=execute]
@@ -156,3 +155,5 @@ root@rhel:~# podman pod ps
 POD ID        NAME              STATUS      CREATED             INFRA ID      # OF CONTAINERS
 34c2405415bd  my-networked-pod  Running     About a minute ago  cd046b7b107d  2
 ----
+
+Now the `+my-networked-pod+` pod can be controlled via systemctl, and will even start up on system boot-up.
