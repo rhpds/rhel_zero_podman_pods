@@ -21,7 +21,7 @@ You should see output similar to this:
 [source,text]
 ----
 # podman –version
-podman version 4.0.2
+podman version 4.9.4-rhel
 #
 ----
 
