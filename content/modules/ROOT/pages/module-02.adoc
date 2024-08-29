@@ -48,7 +48,7 @@ curl http://127.0.0.1:8080
 ----
 # curl http://127.0.0.1:8080
 
-It works!
+<html><body><h1>It works!</h1></body></html>
 
 ----
 
@@ -100,7 +100,7 @@ curl http://127.0.0.1
 ----
 [root@my-pod /]# curl http://127.0.0.1
 
-It works!
+<html><body><h1>It works!</h1></body></html>
 
 [root@my-pod /]#
 
@@ -187,7 +187,7 @@ curl http://127.0.0.1:8080
 ----
 # curl http://127.0.0.1:8080
 
-It works!
+<html><body><h1>It works!</h1></body></html>
 ----
 
 In our next step, we'll look at how to operationalize pod deployements using kubelets!
