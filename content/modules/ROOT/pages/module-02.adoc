@@ -30,10 +30,10 @@ podman ps
 ----
 # podman ps
 
-CONTAINER ID IMAGE                         COMMAND   CREATED           STATUS               PORTS                 NAMES 
-09996c7a624b localhost/podman-pause:4.0.2-1652984291 12 minutes ago Up 10 minutes ago                             2d95aa4fdaee-infra 
-68ca89e03e63 docker.io/library/httpd:latest httpd-foreground 10 minutes ago Up 10 minutes ago                     my-httpd
-90f6b39d18ac docker.io/library/httpd:latest httpd-foreground 4 seconds ago Up 3 seconds ago 0.0.0.0:8080->80/tcp my-bare-httpd
+CONTAINER ID IMAGE                                   COMMAND          CREATED           STATUS           PORTS                               NAMES 
+09996c7a624b localhost/podman-pause:4.0.2-1652984291                   12 minutes ago Up 10 minutes ago                                      2d95aa4fdaee-infra 
+68ca89e03e63 docker.io/library/httpd:latest          httpd-foreground  10 minutes ago Up 10 minutes ago                                      my-httpd
+90f6b39d18ac docker.io/library/httpd:latest          httpd-foreground   4 seconds ago Up 3 seconds ago   0.0.0.0:8080->80/tcp my-bare-httpd
 #
 ----
 
@@ -157,8 +157,8 @@ podman pod ps
 [source,text]
 ----
 # podman pod ps
-POD ID       NAME             STATUS  CREATED         INFRA ID   # OF CONTAINERS 
-63c4292d1879 my-networked-pod Running 19 seconds ago 74be17e394e6 2
+POD ID       NAME             STATUS  CREATED         INFRA ID     # OF CONTAINERS 
+63c4292d1879 my-networked-pod Running 19 seconds ago  74be17e394e6 2
 ----
 
 [source,bash,subs="+macros,+attributes",role=execute]
@@ -170,9 +170,9 @@ podman ps
 ----
 # podman ps
 
-CONTAINER ID IMAGE                         COMMAND   CREATED        STATUS             PORTS               NAMES
-74be17e394e6 localhost/podman-pause:4.0.2-1652984291 26 seconds ago Up 13 seconds ago 0.0.0.0:8080->80/tcp 63c4292d1879-infra
-0d13004a35e7 docker.io/library/httpd:latest httpd-foreground 13 seconds ago Up 12 seconds ago 0.0.0.0:8080->80/tcp my-networked-httpd
+CONTAINER ID IMAGE                                   COMMAND          CREATED           STATUS         PORTS                NAMES
+74be17e394e6 localhost/podman-pause:4.0.2-1652984291                  26 seconds ago Up 13 seconds ago 0.0.0.0:8080->80/tcp 63c4292d1879-infra
+0d13004a35e7 docker.io/library/httpd:latest          httpd-foreground 13 seconds ago Up 12 seconds ago 0.0.0.0:8080->80/tcp my-networked-httpd
 ----
 
 
