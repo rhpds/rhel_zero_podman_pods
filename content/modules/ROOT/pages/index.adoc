@@ -46,7 +46,7 @@ You should see output similar to this:
 Now we can create a container within that pod simply by tellig podman what pod to create the container in.
 
 [source,bash,subs="+macros,+attributes",role=execute]
-podman run --pod my-pod -d --name my-httpd httpd
+podman run --pod my-pod -d --name my-httpd docker.io/library/httpd:latest
 
 
 Again, you should see output similar to this:
