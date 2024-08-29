@@ -47,9 +47,7 @@ curl http://127.0.0.1:8080
 [source,text]
 ----
 # curl http://127.0.0.1:8080
-
 <html><body><h1>It works!</h1></body></html>
-
 ----
 
 Lets try to make a new httpd container, inside of our pod, that forwards in the same way.  First let's stop our new httpd container.
@@ -99,11 +97,8 @@ curl http://127.0.0.1
 [source,text]
 ----
 [root@my-pod /]# curl http://127.0.0.1
-
 <html><body><h1>It works!</h1></body></html>
-
 [root@my-pod /]#
-
 ----
 You can exit that shell with
 
@@ -186,7 +181,6 @@ curl http://127.0.0.1:8080
 [source,text]
 ----
 # curl http://127.0.0.1:8080
-
 <html><body><h1>It works!</h1></body></html>
 ----
 
