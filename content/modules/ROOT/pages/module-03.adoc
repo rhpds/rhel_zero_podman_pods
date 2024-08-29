@@ -116,8 +116,7 @@ curl http://127.0.0.1:8080
 [source,text]
 ----
 # curl http://127.0.0.1:8080
-
-It works!
+<html><body><h1>It works!</h1></body></html>
 ----
 
 In the next step, we're going a little deeper into operationalizing your pod, with Quadlet.
