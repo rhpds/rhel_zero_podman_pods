@@ -1,6 +1,6 @@
 == Operationalizing Pods with kube
 
-*Podman generate, and podman play*
+Podman generate, and Podman play
 
 Another great feature of pods is that you can generate a yaml definition of your pod, and use it to re-create your pod using `+podman generate+` and `+podman play+`.
 
@@ -57,7 +57,7 @@ Now, if we stop, and remove our pod.
 podman pod stop my-networked-pod && podman pod rm my-networked-pod
 ----
 
-We can re-create it easily with podman play.
+We can re-create it easily with `+podman play+`.
 
 
 [source,bash,subs="+macros,+attributes",role=execute]
@@ -65,7 +65,7 @@ We can re-create it easily with podman play.
 podman play kube my-networked-pod.yaml
 ----
 
-NOTE: This feature of podman works on other items as well, you can, for instance, define a volume and use podman generate to store the volume definition as a yaml file. Then re-create it on another system using podman play.
+NOTE: This feature of podman works on other items as well. For instance, you can define a volume and use `+podman generate+` to store the volume definition as a yaml file. Then, you can re-create it on another system using podman play.
 
 [source,text]
 ----
@@ -107,7 +107,7 @@ f87d81a769a3  docker.io/library/httpd:latest           httpd-foreground  3 minut
 
 ----
 
-Now, if you try your curl command from earlier, you should get your test site just as before. You can see how this is a great way to save the deployment information and re-deploy quickly.
+Now, if you try your `+curl+` command from earlier, you should get your test site just as before. You can see how this is a great way to save the deployment information and re-deploy quickly.
 
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
