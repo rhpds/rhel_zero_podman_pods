@@ -58,7 +58,7 @@ podman stop my-bare-httpd
 ----
 
 Now, we still have an httpd container running, but we cant access it,
-not just because we havent forwarded any ports to it, but because its
+not just because we haven't forwarded any ports to it, but because its
 inside of a pod. The pod acts almost like a firewall, allowing or
 disallowing ports to the containers within it. Containers that run
 container images that are configured to listen on a given port are
@@ -77,7 +77,7 @@ outside the pod.
 podman run -it --pod my-pod --rm registry.access.redhat.com/ubi9/ubi
 ----
 
-In this example, we’re running a container, interactively, insdie of our
+In this example, we’re running a container, interactively, inside of our
 pod. You should get to a bash prompt inside of a RHEL UBI container.
 
 [source,text]
