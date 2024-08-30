@@ -1,6 +1,7 @@
 == Operationalizing Pods with kube
 
-Podman generate, and podman play
+*Podman generate, and podman play*
+
 Another great feature of pods is that you can generate a yaml definition of your pod, and use it to re-create your pod using `+podman generate+` and `+podman play+`.
 
 Let's generate a definition for your newly networked pod.
