@@ -2,11 +2,13 @@
 
 Quadlet is a systemd generator, that will take your pod definition, and register it as a service in systemd. We have provided a quadlet pod defintion for you.
 
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 cat my-networked-pod.kube
 ----
 
+.Output
 [source,text]
 ----
 root@rhel:~# cat my-networked-pod.kube
@@ -35,13 +37,14 @@ As you can see, the path to the pod yaml is `+/etc/containers/systemd/my-network
 Let's copy the files into place.
 
 
-
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 cp ~/my-networked-pod.yaml /etc/containers/systemd
 ----
 And then
 
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 cp ~/my-networked-pod.kube /etc/containers/systemd
@@ -49,11 +52,13 @@ cp ~/my-networked-pod.kube /etc/containers/systemd
 
 Now, if we reload systemd, quadlet will generate a service unit for our pod. You can also test the generation using quadlet in a dry-run.
 
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 /usr/libexec/podman/quadlet -dryrun
 ----
 
+.Output
 [source,text]
 ----
 root@rhel:~# /usr/libexec/podman/quadlet -dryrun
@@ -95,6 +100,7 @@ Notice the `+ExecStart+` command in the service. You can see the `+--replace+` f
 
 This looks fine, so let's get this definiteion in place.
 
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 systemctl daemon-reload
@@ -102,11 +108,13 @@ systemctl daemon-reload
 
 Now we can start the service up, but first, let's check podman, and make sure we dont already have our pod running.
 
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 podman pod ps
 ----
 
+.Output
 [source,text]
 ----
 root@rhel:~# podman pod ps
@@ -115,6 +123,7 @@ POD ID      NAME        STATUS      CREATED     INFRA ID    # OF CONTAINERS
 
 Looks good, Let's start our pod up.
 
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 systemctl start my-networked-pod.service
@@ -122,11 +131,13 @@ systemctl start my-networked-pod.service
 
 This should go and download any container images that are neccessary, and then start up our pod.
 
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 systemctl status my-networked-pod.service
 ----
 
+.Output
 [source,text]
 ----
 root@rhel:~# systemctl status my-networked-pod
@@ -144,11 +155,13 @@ root@rhel:~# systemctl status my-networked-pod
 
 ----
 
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 podman pod ps
 ----
 
+.Output
 [source,text]
 ----
 root@rhel:~# podman pod ps
