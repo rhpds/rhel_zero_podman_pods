@@ -7,7 +7,7 @@ Another great feature of pods is that you can generate a yaml definition of your
 Let's generate a definition for your newly networked pod.
 
 
-
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 podman generate kube my-networked-pod > my-networked-pod.yaml
@@ -16,11 +16,13 @@ podman generate kube my-networked-pod > my-networked-pod.yaml
 
 Now, we can see what we generated
 
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 cat my-networked-pod.yaml
 ----
 
+.Output
 [source,text]
 ----
 root@rhel:~# cat my-networked-pod.yaml
@@ -51,7 +53,7 @@ status: {}
 
 Now, if we stop, and remove our pod.
 
-
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 podman pod stop my-networked-pod && podman pod rm my-networked-pod
@@ -59,7 +61,7 @@ podman pod stop my-networked-pod && podman pod rm my-networked-pod
 
 We can re-create it easily with `+podman play+`.
 
-
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 podman play kube my-networked-pod.yaml
@@ -67,6 +69,7 @@ podman play kube my-networked-pod.yaml
 
 NOTE: This feature of podman works on other items as well. For instance, you can define a volume and use `+podman generate+` to store the volume definition as a yaml file. Then, you can re-create it on another system using podman play.
 
+.Output
 [source,text]
 ----
 root@rhel:~# podman play kube my-networked-pod.yaml
@@ -79,12 +82,13 @@ f87d81a769a3cef7b5caf52e958426fd4f3f614e130bbb5e91c193ac36b3a27d
 
 Now, if we check on `+podman pod ps+` and `+podman ps+` we will see a new pod, and container within it.
 
-
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 podman pod ps
 ----
 
+.Output
 [source,text]
 ----
 root@rhel:~# podman pod ps
@@ -93,11 +97,13 @@ POD ID        NAME              STATUS      CREATED        INFRA ID      # OF CO
 
 ----
 
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 podman ps
 ----
 
+.Output
 [source,text]
 ----
 root@rhel:~# podman ps
@@ -109,11 +115,13 @@ f87d81a769a3  docker.io/library/httpd:latest           httpd-foreground  3 minut
 
 Now, if you try your `+curl+` command from earlier, you should get your test site just as before. You can see how this is a great way to save the deployment information and re-deploy quickly.
 
+.Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 curl http://127.0.0.1:8080
 ----
 
+.Output
 [source,text]
 ----
 # curl http://127.0.0.1:8080
