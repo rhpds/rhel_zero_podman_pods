@@ -66,6 +66,7 @@ Again, you should see output similar to this:
 ----
 
 Now, we can see that our container is running with
+
 .Command
 [source,bash,subs="+macros,+attributes",role=execute]
 podman ps
