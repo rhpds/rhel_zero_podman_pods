@@ -59,8 +59,6 @@ Again, you should see output similar to this:
 .Output
 [source,text]
 ----
-# podman run –pod my-pod -d –name my-httpd httpd
-
 68ca89e03e63df047cc59cbf8ecb648b71c136cc4c9611a709577195b2f2b048 
 #
 ----
