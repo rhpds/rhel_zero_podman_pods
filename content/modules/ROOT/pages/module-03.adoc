@@ -124,3 +124,16 @@ curl http://127.0.0.1:8080
 ----
 
 In the next step, we're going a little deeper into operationalizing your pod, with Quadlet.
+Remove the existing pod
+
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
+----
+podman pod stop my-networked-pod && podman pod rm my-networked-pod
+----
+
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
+----
+podman pod ps
+----
