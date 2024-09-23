@@ -90,9 +90,14 @@ pod. You should get to a bash prompt inside of a RHEL UBI container.
 .Output
 [source,text]
 ----
-# podman run -it –pod my-pod –rm registry.access.redhat.com/ubi9/ubi
-[root@my-pod /]#
-
+[root@rhel ~]# podman run -it --pod my-pod --rm registry.access.redhat.com/ubi9/ubi
+Trying to pull registry.access.redhat.com/ubi9/ubi:latest...
+Getting image source signatures
+Checking if image destination supports signatures
+Copying blob 40049f9dc504 done   | 
+Copying config dfd20f40ba done   | 
+Writing manifest to image destination
+Storing signatures
 ----
 
 This container doesn't run any services, but if we try to use curl on localhost, we'll see that in fact we get a response!
