@@ -75,7 +75,7 @@ podman ps
 # podman ps
 
 CONTAINER ID  IMAGE                                   COMMAND           CREATED        STATUS              PORTS NAMES 
-09996c7a624b  localhost/podman-pause:4.0.2-1652984291                   2 minutes ago  Up 51 seconds ago         2d95aa4fdaee-infra 
+09996c7a624b  localhost/podman-pause:4.9.4-rhel-1723107101              2 minutes ago  Up 51 seconds ago         2d95aa4fdaee-infra 
 68ca89e03e63  docker.io/library/httpd:latest          httpd-foreground  51 seconds ago Up 50 seconds ago         my-httpd 
 #
 ----
