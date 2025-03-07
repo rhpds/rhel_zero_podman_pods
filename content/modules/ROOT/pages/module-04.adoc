@@ -11,7 +11,6 @@ cat my-networked-pod.kube
 .Output
 [source,text]
 ----
-root@rhel:~# cat my-networked-pod.kube
 [Install]
 WantedBy=default.target
 
@@ -42,6 +41,9 @@ Let's copy the files into place.
 ----
 cp ~/my-networked-pod.yaml /etc/containers/systemd
 ----
+
+This command has no expected output.
+
 And then
 
 .Command
@@ -49,6 +51,8 @@ And then
 ----
 cp ~/my-networked-pod.kube /etc/containers/systemd
 ----
+
+This command has no expected output.
 
 Now, if we reload systemd, quadlet will generate a service unit for our pod. You can also test the generation using quadlet in a dry-run.
 
@@ -61,7 +65,6 @@ Now, if we reload systemd, quadlet will generate a service unit for our pod. You
 .Output
 [source,text]
 ----
-root@rhel:~# /usr/libexec/podman/quadlet -dryrun
 quadlet-generator[4025]: Loading source unit file /etc/containers/systemd/my-networked-pod.kube
 ---my-networked-pod.service---
 [Install]
@@ -106,6 +109,8 @@ This looks fine, so let's get this definiteion in place.
 systemctl daemon-reload
 ----
 
+This command has no expected output.
+
 Now we can start the service up, but first, let's check podman, and make sure we dont already have our pod running.
 
 .Command
@@ -117,7 +122,6 @@ podman pod ps
 .Output
 [source,text]
 ----
-root@rhel:~# podman pod ps
 POD ID      NAME        STATUS      CREATED     INFRA ID    # OF CONTAINERS
 ----
 
@@ -128,6 +132,8 @@ Looks good, Let's start our pod up.
 ----
 systemctl start my-networked-pod.service
 ----
+
+This command has no expected output.
 
 This should go and download any container images that are neccessary, and then start up our pod.
 
@@ -140,20 +146,21 @@ systemctl status my-networked-pod.service
 .Output
 [source,text]
 ----
-root@rhel:~# systemctl status my-networked-pod
 ● my-networked-pod.service
      Loaded: loaded (/etc/containers/systemd/my-networked-pod.kube; generated)
-     Active: active (running) since Wed 2024-01-31 19:19:45 UTC; 1min 2s ago
-   Main PID: 4857 (conmon)
-      Tasks: 3 (limit: 23073)
-     Memory: 2.8M
-        CPU: 444ms
+     Active: active (running) since Fri 2025-03-07 20:09:58 UTC; 37s ago
+   Main PID: 44351 (conmon)
+      Tasks: 3 (limit: 22484)
+     Memory: 2.3M
+        CPU: 668ms
      CGroup: /system.slice/my-networked-pod.service
              ├─4857 /usr/bin/conmon --api-version 1 -c 86b713eda7f56e49902b217268f7619bd9e455cebb2ef7d3b5820fd92ce58e41 -u 86b713eda7f56e>
              ├─4928 /usr/bin/conmon --api-version 1 -c cd046b7b107d64d13e47cc14449e69739aab23f8c526bbd54c394861ec253f72 -u cd046b7b107d64>
              └─4934 /usr/bin/conmon --api-version 1 -c fff1424f8329ee251d60be28f1eae7d2b79c367a1f82b94cda6309febebe05bf -u fff1424f8329ee
 
 ----
+
+NOTE: The above output may show red warnings regarding the server's FQDN. Ignore these for this lab. Press *'+q+'* to exit the service status
 
 .Command
 [source,bash,subs="+macros,+attributes",role=execute]
@@ -164,7 +171,6 @@ podman pod ps
 .Output
 [source,text]
 ----
-root@rhel:~# podman pod ps
 POD ID        NAME              STATUS      CREATED             INFRA ID      # OF CONTAINERS
 34c2405415bd  my-networked-pod  Running     About a minute ago  cd046b7b107d  2
 ----

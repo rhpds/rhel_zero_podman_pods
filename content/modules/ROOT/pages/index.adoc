@@ -22,9 +22,7 @@ You should see output similar to this:
 .Output
 [source,text]
 ----
-# podman –version
-podman version 4.9.4-rhel
-#
+podman version 5.2.2
 ----
 
 == Introduction to Podman Pods
@@ -34,16 +32,16 @@ services. We can create a pod easily, with the following command.
 
 .Command
 [source,bash,subs="+macros,+attributes",role=execute]
+----
 podman pod create --name my-pod
+----
 
 You should see output similar to this:
 
 .Output
 [source,text]
 ----
-# podman pod create –name my-pod
-2d95aa4fdaee5f9b612ad018a42a6f48855ff240784c4be3c9c65f540f6c6448 
-#
+2d95aa4fdaee5f9b612ad018a42a6f48855ff240784c4be3c9c65f540f6c6448
 ----
 
 
@@ -51,52 +49,50 @@ Now we can create a container within that pod simply by tellig podman what pod t
 
 .Command
 [source,bash,subs="+macros,+attributes",role=execute]
+----
 podman run --pod my-pod -d --name my-httpd docker.io/library/httpd:latest
-
+----
 
 Again, you should see output similar to this:
 
 .Output
 [source,text]
 ----
-68ca89e03e63df047cc59cbf8ecb648b71c136cc4c9611a709577195b2f2b048 
-#
+68ca89e03e63df047cc59cbf8ecb648b71c136cc4c9611a709577195b2f2b048
 ----
 
 Now, we can see that our container is running with
 
 .Command
 [source,bash,subs="+macros,+attributes",role=execute]
+----
 podman ps
+----
 
 .Output
 [source,text]
 ----
-# podman ps
-
-CONTAINER ID  IMAGE                                   COMMAND           CREATED        STATUS              PORTS NAMES 
-09996c7a624b  localhost/podman-pause:4.9.4-rhel-1723107101              2 minutes ago  Up 51 seconds ago         2d95aa4fdaee-infra 
-68ca89e03e63  docker.io/library/httpd:latest          httpd-foreground  51 seconds ago Up 50 seconds ago         my-httpd 
-#
+CONTAINER ID  IMAGE                                   COMMAND           CREATED        STATUS              PORTS NAMES
+09996c7a624b  localhost/podman-pause:4.9.4-rhel-1723107101              2 minutes ago  Up 51 seconds ago         2d95aa4fdaee-infra
+68ca89e03e63  docker.io/library/httpd:latest          httpd-foreground  51 seconds ago Up 50 seconds ago         my-httpd
 ----
 
 
-But what is that extra container? `+2d95aa4fdaee-infra+`
+But what is that extra container? *`+2d95aa4fdaee-infra+`*
 
 That is a special container that runs our pod.  We can see that the pod is up and running, with two containers, even though we only started a single container inside of it.
 
 .Command
 [source,bash,subs="+macros,+attributes",role=execute]
+----
 podman pod ps
+----
 
 .Output
 [source,text]
 ----
-# podman pod ps
-
-POD ID       NAME   STATUS  CREATED       INFRA ID     # OF CONTAINERS 
-2d95aa4fdaee my-pod Running 5 minutes ago 09996c7a624b 2 
-# 
+POD ID       NAME   STATUS  CREATED       INFRA ID     # OF CONTAINERS
+2d95aa4fdaee my-pod Running 5 minutes ago 09996c7a624b 2
 ----
 
 In the next step, we'll work with networking within our pod.

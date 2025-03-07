@@ -16,6 +16,14 @@ container, via localhost on my container host.
 podman run -d -p 8080:80 --name my-bare-httpd httpd
 ----
 
+You should see output similar to this:
+
+.Output
+[source,text]
+----
+4e4ad331a910fddff34b896dc58ad7ea5f4c262c7520c91a995f38a04b85a254
+----
+
 This tells podman to run the same container image, with a new name, and
 forward port 8080 on our host, to port 80 on the container.
 
@@ -31,13 +39,10 @@ podman ps
 .Output
 [source,text]
 ----
-# podman ps
-
 CONTAINER ID IMAGE                                   COMMAND          CREATED           STATUS           PORTS                               NAMES 
 09996c7a624b localhost/podman-pause:4.9.4-rhel-1723107101              12 minutes ago Up 10 minutes ago                                      2d95aa4fdaee-infra 
 68ca89e03e63 docker.io/library/httpd:latest          httpd-foreground  10 minutes ago Up 10 minutes ago                                      my-httpd
 90f6b39d18ac docker.io/library/httpd:latest          httpd-foreground   4 seconds ago Up 3 seconds ago   0.0.0.0:8080->80/tcp my-bare-httpd
-#
 ----
 
 And we can even test that out with `curl`
@@ -51,7 +56,6 @@ curl http://127.0.0.1:8080
 .Output
 [source,text]
 ----
-# curl http://127.0.0.1:8080
 <html><body><h1>It works!</h1></body></html>
 ----
 
@@ -63,13 +67,19 @@ Lets try to make a new httpd container, inside of our pod, that forwards in the 
 podman stop my-bare-httpd
 ----
 
+.Output
+[source,text]
+----
+my-bare-httpd
+----
+
 Now, we still have an httpd container running, but we cant access it,
 not just because we haven't forwarded any ports to it, but because its
 inside of a pod. The pod acts almost like a firewall, allowing or
 disallowing ports to the containers within it. Containers that run
 container images that are configured to listen on a given port are
 accessible to each other within the pod, but outside the pod are not
-accessible unless we tell the pod to allow it. 
+accessible unless we tell the pod to allow it.
 
 
 == Pod networking
@@ -90,7 +100,6 @@ pod. You should get to a bash prompt inside of a RHEL UBI container.
 .Output
 [source,text]
 ----
-[root@rhel ~]# podman run -it --pod my-pod --rm registry.access.redhat.com/ubi9/ubi
 Trying to pull registry.access.redhat.com/ubi9/ubi:latest...
 Getting image source signatures
 Checking if image destination supports signatures
@@ -112,10 +121,9 @@ curl http://127.0.0.1
 .Output
 [source,text]
 ----
-[root@my-pod /]# curl http://127.0.0.1
 <html><body><h1>It works!</h1></body></html>
-[root@my-pod /]#
 ----
+
 You can exit that shell with
 
 .Command
@@ -127,12 +135,8 @@ exit
 .Output
 [source,text]
 ----
-[root@my-pod /]# exit
 exit
-
-root@rhel :~#
 ----
-
 
 So let's re-create our pod, and make it listen on port 80.  Let's stop, and then delete our pod.
 
@@ -140,6 +144,14 @@ So let's re-create our pod, and make it listen on port 80.  Let's stop, and then
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 podman pod stop my-pod && podman pod rm my-pod
+----
+
+You should see output similar to this:
+
+.Output
+[source,text]
+----
+58da50a163b490e25a421000fd8ae8a6f4321b79eee9a225dfd750ab2780184d
 ----
 
 Now let’s make a new pod, with a new httpd container, and have the pod
@@ -151,6 +163,14 @@ forward port 8080 to port 80 inside the pod.
 podman pod create --name my-networked-pod -p 8080:80
 ----
 
+Again, you should see output similar to this:
+
+.Output
+[source,text]
+----
+23ae565d483ae6b1ee9a2c3cefbf1505cd6f10e1d69c7083f7583444451145f0
+----
+
 And then we’ll need a container to listen on port 80, but we don’t need
 to tell the container to forward anything, that’s handled at the pod
 level.
@@ -159,6 +179,14 @@ level.
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 podman run -d --pod my-networked-pod --name my-networked-httpd httpd
+----
+
+Again, you should see output similar to this:
+
+.Output
+[source,text]
+----
+3486a6b6422fe2e93c1c5c2aead2ba1fc04e26ebc2e23146d38a80d14233a05b
 ----
 
 Now, if we check `+podman pod ps+` and `+podman ps+` we’ll see that both
@@ -174,9 +202,8 @@ podman pod ps
 .Output
 [source,text]
 ----
-# podman pod ps
-POD ID       NAME             STATUS  CREATED         INFRA ID     # OF CONTAINERS 
-63c4292d1879 my-networked-pod Running 19 seconds ago  74be17e394e6 2
+POD ID        NAME              STATUS      CREATED        INFRA ID      # OF CONTAINERS
+23ae565d483a  my-networked-pod  Running     5 minutes ago  24f973ef9cb0  2
 ----
 
 .Command
@@ -188,8 +215,6 @@ podman ps
 .Output
 [source,text]
 ----
-# podman ps
-
 CONTAINER ID IMAGE                                   COMMAND          CREATED           STATUS         PORTS                NAMES
 74be17e394e6 localhost/podman-pause:4.0.2-1652984291                  26 seconds ago Up 13 seconds ago 0.0.0.0:8080->80/tcp 63c4292d1879-infra
 0d13004a35e7 docker.io/library/httpd:latest          httpd-foreground 13 seconds ago Up 12 seconds ago 0.0.0.0:8080->80/tcp my-networked-httpd
@@ -207,7 +232,6 @@ curl http://127.0.0.1:8080
 .Output
 [source,text]
 ----
-# curl http://127.0.0.1:8080
 <html><body><h1>It works!</h1></body></html>
 ----
 

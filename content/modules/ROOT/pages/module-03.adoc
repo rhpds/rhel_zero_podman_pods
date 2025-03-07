@@ -11,8 +11,9 @@ Let's generate a definition for your newly networked pod.
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 podman generate kube my-networked-pod > my-networked-pod.yaml
-
 ----
+
+This command has no expected output.
 
 Now, we can see what we generated
 
@@ -25,15 +26,16 @@ cat my-networked-pod.yaml
 .Output
 [source,text]
 ----
-root@rhel:~# cat my-networked-pod.yaml
 # Save the output of this file and use kubectl create -f to import
 # it into Kubernetes.
 #
-# Created with podman-4.9.4-rhel
+# Created with podman-5.2.2
 apiVersion: v1
 kind: Pod
 metadata:
-  creationTimestamp: "2024-09-23T17:56:07Z"
+  annotations:
+    io.kubernetes.cri-o.SandboxID/my-networked-httpd: 24f973ef9cb0d9b0495c39e9460100142e9cddcddcc9d657fcfdc6a8eba40213
+  creationTimestamp: "2025-03-07T20:03:31Z"
   labels:
     app: my-networked-pod
   name: my-networked-pod
@@ -54,6 +56,13 @@ Now, if we stop, and remove our pod.
 podman pod stop my-networked-pod && podman pod rm my-networked-pod
 ----
 
+.Output
+[source,text]
+----
+my-networked-pod
+23ae565d483ae6b1ee9a2c3cefbf1505cd6f10e1d69c7083f7583444451145f0
+----
+
 We can re-create it easily with `+podman play+`.
 
 .Command
@@ -67,12 +76,10 @@ NOTE: This feature of podman works on other items as well. For instance, you can
 .Output
 [source,text]
 ----
-root@rhel:~# podman play kube my-networked-pod.yaml
 Pod:
-2f3d42d6cac720972889496334ef23260fa33030ddb3bccdcb7ff3a15dea07ac
+9fb1a35e42cc730f02a93cddd5be19c2a33f3097ff6888cbba74076d75efc8b5
 Container:
-f87d81a769a3cef7b5caf52e958426fd4f3f614e130bbb5e91c193ac36b3a27d
-
+7eadafc08d71e20e50796ede7e3e4e45eb14547aa6738cd4203e0d747dfd3747
 ----
 
 Now, if we check on `+podman pod ps+` and `+podman ps+` we will see a new pod, and container within it.
@@ -86,10 +93,8 @@ podman pod ps
 .Output
 [source,text]
 ----
-root@rhel:~# podman pod ps
 POD ID        NAME              STATUS      CREATED        INFRA ID      # OF CONTAINERS
 2f3d42d6cac7  my-networked-pod  Running     3 minutes ago  d9f73884ad91  2
-
 ----
 
 .Command
@@ -101,11 +106,9 @@ podman ps
 .Output
 [source,text]
 ----
-root@rhel:~# podman ps
 CONTAINER ID  IMAGE                                    COMMAND           CREATED        STATUS        PORTS                 NAMES
 d9f73884ad91  localhost/podman-pause:4.4.1-1682527828                    3 minutes ago  Up 3 minutes  0.0.0.0:8080->80/tcp  2f3d42d6cac7-infra
 f87d81a769a3  docker.io/library/httpd:latest           httpd-foreground  3 minutes ago  Up 3 minutes  0.0.0.0:8080->80/tcp  my-networked-pod-my-networked-httpd
-
 ----
 
 Now, if you try your `+curl+` command from earlier, you should get your test site just as before. You can see how this is a great way to save the deployment information and re-deploy quickly.
@@ -119,7 +122,6 @@ curl http://127.0.0.1:8080
 .Output
 [source,text]
 ----
-# curl http://127.0.0.1:8080
 <html><body><h1>It works!</h1></body></html>
 ----
 
@@ -132,8 +134,21 @@ Remove the existing pod
 podman pod stop my-networked-pod && podman pod rm my-networked-pod
 ----
 
+.Output
+[source,text]
+----
+my-networked-pod
+9fb1a35e42cc730f02a93cddd5be19c2a33f3097ff6888cbba74076d75efc8b5
+----
+
 .Command
 [source,bash,subs="+macros,+attributes",role=execute]
 ----
 podman pod ps
+----
+
+.Output
+[source,text]
+----
+POD ID      NAME        STATUS      CREATED     INFRA ID    # OF CONTAINERS
 ----
